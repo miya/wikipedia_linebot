@@ -27,15 +27,13 @@ def wiki(text):
     try:
         msg = wikipedia.summary(text, sentences=1)
     except wikipedia.exceptions.PageError:
-        msg = "見つかりませんでした。"
+        msg = "\"{}\" は見つかりませんでした。".format(text)
     except wikipedia.exceptions.DisambiguationError:
         msg = "曖昧な単語が含まれています。"
     except wikipedia.exceptions.RedirectError:
         msg = "ページタイトルが予期せずリダイレクトされました。"
     except wikipedia.exceptions.HTTPTimeoutError:
         msg = "Mediawikiサーバーへのリクエストがタイムアウトしました。"
-    except:
-        msg = "予期せぬ例外が発生しました。"
     finally:
         return msg
 
