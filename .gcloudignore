@@ -1,0 +1,8 @@
+.git
+.idea
+
+.gitignore
+.gcloudignore
+
+/setup.cfg
+__pycache__/

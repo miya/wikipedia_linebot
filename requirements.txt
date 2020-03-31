@@ -1,0 +1,4 @@
+flask
+gunicorn
+wikipedia
+line-bot-sdk
