@@ -22,12 +22,12 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 
-def wiki(text):
+def wiki(input_text):
     msg = ""
     try:
-        msg = wikipedia.summary(text, sentences=1)
+        msg = wikipedia.summary(input_text)
     except wikipedia.exceptions.PageError:
-        msg = "\"{}\" は見つかりませんでした。".format(text)
+        msg = "\"{}\" は見つかりませんでした。".format(input_text)
     except wikipedia.exceptions.DisambiguationError:
         msg = "曖昧な単語が含まれています。"
     except wikipedia.exceptions.RedirectError:
