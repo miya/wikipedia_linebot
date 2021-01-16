@@ -4,7 +4,7 @@ import wikipedia
 from flask import Flask, request, abort
 from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
-from linebot.models import (MessageEvent, TextMessage, TextSendMessage)
+from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
 
 
 # Flaskのインスタンス
@@ -23,7 +23,7 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 
-def wiki(input_text):
+def wikipedia_summary(input_text):
     msg = ''
     try:
         msg = wikipedia.summary(input_text).strip()
@@ -37,6 +37,12 @@ def wiki(input_text):
         msg = 'Mediawikiサーバーへのリクエストがタイムアウトしました。'
     finally:
         return msg
+
+
+def wikipedia_search(input_text):
+    items = wikipedia.search(input_text)
+    items = [QuickReplyButton(action=MessageAction(label=i, text=i)) for i in items if len(i) <= 20][:13]
+    return QuickReply(items=items) if items else None
 
 
 @app.route('/', methods=['GET'])
@@ -63,10 +69,18 @@ def handle_message(event):
     user_name = line_bot_api.get_profile(user_id).display_name
     print(f'Received message: \'{message}\' from {user_name}')
 
-    result = wiki(message)
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=result))
+    text = wikipedia_summary(message)
+    quick_reply = wikipedia_search(message)
+
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(
+        text=text,
+        quick_reply=quick_reply
+    ))
 
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+    # debug
+    # app.run(debug=True)
