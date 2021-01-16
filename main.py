@@ -26,7 +26,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 def wiki(input_text):
     msg = ''
     try:
-        msg = wikipedia.summary(input_text)
+        msg = wikipedia.summary(input_text).strip()
     except wikipedia.exceptions.PageError:
         msg = f'\"{input_text}\" は見つかりませんでした。'
     except wikipedia.exceptions.DisambiguationError:
