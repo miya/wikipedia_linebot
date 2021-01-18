@@ -9,6 +9,7 @@ from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickRep
 
 # Flaskのインスタンス
 app = Flask(__name__)
+app.debug = bool(os.environ.get('DEBUG'))
 
 # wikipediaの言語設定
 wikipedia.set_lang('ja')
@@ -79,8 +80,5 @@ def handle_message(event):
 
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run()
 
-    # debug
-    # app.run(debug=True)
