@@ -1,4 +1,4 @@
-from src import app, handler, line_bot_api
+from src import app, handler, line
 from src.wiki import wikipedia_summary, wikipedia_search
 
 from flask import request, abort
@@ -27,13 +27,13 @@ def callback():
 def handle_message(event):
     message = event.message.text
     user_id = event.source.user_id
-    user_name = line_bot_api.get_profile(user_id).display_name
+    user_name = line.get_profile(user_id).display_name
     print(f'Received message: \'{message}\' from {user_name}')
 
     text = wikipedia_summary(message)
     quick_reply = wikipedia_search(message)
 
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(
+    line.reply_message(event.reply_token, TextSendMessage(
         text=text,
         quick_reply=quick_reply
     ))
