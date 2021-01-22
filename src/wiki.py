@@ -20,5 +20,5 @@ def wikipedia_summary(input_text):
 
 def wikipedia_search(input_text):
     items = wikipedia.search(input_text, results=13)
-    items = [QuickReplyButton(action=MessageAction(label=i, text=i)) for i in items if len(i) <= 20]
+    items = [QuickReplyButton(action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items]
     return QuickReply(items=items) if items else None
