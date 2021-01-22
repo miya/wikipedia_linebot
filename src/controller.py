@@ -1,31 +1,9 @@
 from src import app, handler, line_bot_api
+from src.wiki import wikipedia_summary, wikipedia_search
 
-import wikipedia
 from flask import request, abort
 from linebot.exceptions import (InvalidSignatureError)
-from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
-
-
-def wikipedia_summary(input_text):
-    msg = ''
-    try:
-        msg = wikipedia.summary(input_text).strip()
-    except wikipedia.exceptions.PageError:
-        msg = f'\"{input_text}\" は見つかりませんでした。'
-    except wikipedia.exceptions.DisambiguationError:
-        msg = '曖昧な単語が含まれています。'
-    except wikipedia.exceptions.RedirectError:
-        msg = 'ページタイトルが予期せずリダイレクトされました。'
-    except wikipedia.exceptions.HTTPTimeoutError:
-        msg = 'Mediawikiサーバーへのリクエストがタイムアウトしました。'
-    finally:
-        return msg
-
-
-def wikipedia_search(input_text):
-    items = wikipedia.search(input_text)
-    items = [QuickReplyButton(action=MessageAction(label=i, text=i)) for i in items if len(i) <= 20][:13]
-    return QuickReply(items=items) if items else None
+from linebot.models import (MessageEvent, TextMessage, TextSendMessage)
 
 
 @app.route('/', methods=['GET'])
