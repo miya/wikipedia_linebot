@@ -1,27 +1,9 @@
-import os
-import warnings
+from src import app, handler, line_bot_api
+
 import wikipedia
-from flask import Flask, request, abort
-from linebot import (LineBotApi, WebhookHandler)
+from flask import request, abort
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
-
-
-# Flaskのインスタンス
-app = Flask(__name__)
-app.debug = bool(os.environ.get('DEBUG'))
-
-# wikipediaの言語設定
-wikipedia.set_lang('ja')
-
-# 警告の無視
-warnings.simplefilter('ignore')
-
-# アクセストークンの設定
-LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
-LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
-line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 
 def wikipedia_summary(input_text):
@@ -77,8 +59,3 @@ def handle_message(event):
         text=text,
         quick_reply=quick_reply
     ))
-
-
-if __name__ == '__main__':
-    app.run()
-
