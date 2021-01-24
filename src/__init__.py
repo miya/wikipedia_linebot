@@ -1,16 +1,16 @@
 # setup for flask
-import os
+import config
 from flask import Flask
 
 app = Flask(__name__)
-app.debug = bool(os.environ.get('DEBUG'))
+app.debug = bool(config.DEBUG)
 
 
 # setup for line-bot-sdk
 from linebot import (LineBotApi, WebhookHandler)
 
-LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
-LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
+LINE_CHANNEL_ACCESS_TOKEN = config.LINE_CHANNEL_ACCESS_TOKEN
+LINE_CHANNEL_SECRET = config.LINE_CHANNEL_SECRET
 line = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
