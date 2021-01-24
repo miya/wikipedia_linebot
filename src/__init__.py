@@ -33,4 +33,4 @@ languages = wikipedia.languages()
 
 
 # including other scripts
-from src import controller
+from src import views
