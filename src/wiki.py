@@ -3,17 +3,17 @@ from linebot.models import (QuickReply, QuickReplyButton, MessageAction)
 
 
 def wikipedia_summary(input_text):
-    msg = ''
+    msg = 'none'
     try:
         msg = wikipedia.summary(input_text).strip()
     except wikipedia.exceptions.PageError:
-        msg = f'\"{input_text}\" は見つかりませんでした。'
+        msg = 'There was no match.'
     except wikipedia.exceptions.DisambiguationError:
-        msg = '曖昧な単語が含まれています。'
+        msg = 'Contains ambiguous words.'
     except wikipedia.exceptions.RedirectError:
-        msg = 'ページタイトルが予期せずリダイレクトされました。'
+        msg = 'The page title was unexpectedly redirected.'
     except wikipedia.exceptions.HTTPTimeoutError:
-        msg = 'Mediawikiサーバーへのリクエストがタイムアウトしました。'
+        msg = 'The request to the Mediawiki server timed out.'
     finally:
         return msg
 

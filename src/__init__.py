@@ -6,6 +6,15 @@ app = Flask(__name__)
 app.debug = bool(config.DEBUG)
 
 
+# setup for database
+from flask_sqlalchemy import SQLAlchemy
+
+SQLALCHEMY_DATABASE_URI = config.SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
 # setup for line-bot-sdk
 from linebot import (LineBotApi, WebhookHandler)
 
@@ -20,7 +29,7 @@ import wikipedia
 import warnings
 
 warnings.simplefilter('ignore')
-wikipedia.set_lang('ja')
+languages = wikipedia.languages()
 
 
 # including other scripts
