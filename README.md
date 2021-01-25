@@ -11,6 +11,9 @@ Wikipediaの検索結果を返してくれるLINE Bot
 input  > {検索ワード}
 output > {検索ワード}の要約と関連ワードを表示します。
 
+input  > :random
+output > wikipediaからランダムな記事を表示します。
+
 input  > :history
 output > 最大13件の検索履歴を表示します。
 
