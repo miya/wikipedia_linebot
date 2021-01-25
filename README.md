@@ -11,11 +11,14 @@ Wikipediaの検索結果を返してくれるLINE Bot
 input  > {検索ワード}
 output > {検索ワード}の要約と関連ワードを表示します。
 
-input  > :set_lang={言語コード} 
-output > wikipediaの検索結果を任意の言語に変更します。例（set_lang=en）
-
 input  > :history
 output > 最大13件の検索履歴を表示します。
+
+input  > :set_lang={言語コード} 
+output > wikipediaの検索結果を任意の言語に変更します。例（:set_lang=en）
+
+input  > :set_show_url=true
+output > 要約メッセージの下部にURLを含めます。デフォルト（:set_show_url=false）
 ```
 
 
