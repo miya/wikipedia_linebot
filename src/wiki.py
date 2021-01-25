@@ -3,7 +3,7 @@ from linebot.models import (QuickReply, QuickReplyButton, MessageAction)
 
 
 def wikipedia_summary(input_text):
-    msg = 'none'
+    msg = ''
     try:
         msg = wikipedia.summary(input_text).strip()
     except wikipedia.exceptions.PageError:
@@ -15,7 +15,7 @@ def wikipedia_summary(input_text):
     except wikipedia.exceptions.HTTPTimeoutError:
         msg = 'The request to the Mediawiki server timed out.'
     finally:
-        return msg
+        return msg if msg else 'none'
 
 
 def wikipedia_search(input_text):
