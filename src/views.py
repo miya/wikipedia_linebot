@@ -5,7 +5,7 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
 
 from src import app, handler, line, languages
-from src.wiki import wikipedia_summary, wikipedia_search
+from src.wiki import wikipedia_page, wikipedia_search
 from src.database import get_user, update_lang, get_history, add_history
 
 
@@ -62,10 +62,10 @@ def handle_message(event):
         reply_content = TextSendMessage(text=text if text else 'No history yet.', quick_reply=quick_reply)
 
     else:
-        lang = get_user(user_id).lang
-        wikipedia.set_lang(lang)
+        user = get_user(user_id)
+        wikipedia.set_lang(user.lang)
         add_history(user_id, message)
-        text = wikipedia_summary(message)
+        text = wikipedia_page(message, url=user.show_url)
         quick_reply = wikipedia_search(message)
         reply_content = TextSendMessage(text=text, quick_reply=quick_reply)
 

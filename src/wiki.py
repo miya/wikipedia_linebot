@@ -2,10 +2,13 @@ import wikipedia
 from linebot.models import (QuickReply, QuickReplyButton, MessageAction)
 
 
-def wikipedia_summary(input_text):
+def wikipedia_page(input_text, url=False):
     msg = ''
     try:
-        msg = wikipedia.summary(input_text).strip()
+        page = wikipedia.page(input_text)
+        msg = page.summary.replace('\n', '')
+        if url:
+            msg += f'\n\n{page.url}'
     except wikipedia.exceptions.PageError:
         msg = 'There was no match.'
     except wikipedia.exceptions.DisambiguationError:

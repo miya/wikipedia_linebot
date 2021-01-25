@@ -8,6 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(80), unique=True)
     lang = db.Column(db.String(80), default='ja')
+    show_url = db.Column(db.Boolean, default=False)
 
 
 class History(db.Model):
