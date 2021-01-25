@@ -61,7 +61,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
         page = wikipedia_page(message, show_url=user.show_url)
         title = page[0]
         text = page[1]
-        quick_reply = wikipedia_search(title)
+        quick_reply = wikipedia_search(title if title else message)
         if title:
             add_history(user_id, title)
         reply_content = TextSendMessage(text=text, quick_reply=quick_reply)
