@@ -1,10 +1,12 @@
 from sqlalchemy import desc
+from typing import Dict
+from flask_sqlalchemy import BaseQuery
 
 from src import db
 from src.models import Users, Histories
 
 
-def get_user(user_id):
+def get_user(user_id: str) -> Users:
     user = db.session.query(Users).filter_by(user_id=user_id).first()
     if not user:
         user = Users()
@@ -14,7 +16,7 @@ def get_user(user_id):
     return user
 
 
-def update_user(user_id, **kwargs):
+def update_user(user_id: str, **kwargs: Dict) -> None:
     user = db.session.query(Users).filter_by(user_id=user_id).first()
     if not user:
         user = Users()
@@ -34,15 +36,15 @@ def update_user(user_id, **kwargs):
         db.session.commit()
 
 
-def add_history(user_id, message):
+def add_history(user_id: str, word: str) -> None:
     history = Histories()
     history.user_id = user_id
-    history.history = message
+    history.history = word
     db.session.add(history)
     db.session.commit()
 
 
-def get_history(user_id):
+def get_history(user_id: str) -> BaseQuery:
     return db.session.query(Histories)\
         .filter_by(user_id=user_id)\
         .order_by(desc(Histories.created_at))\
