@@ -6,7 +6,7 @@ from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickRep
 
 from src import app, handler, line, languages
 from src.wiki import wikipedia_page, wikipedia_search
-from src.database import get_user, update_lang, get_history, add_history
+from src.database import get_user, update_user, get_history, add_history
 
 
 @app.route('/', methods=['GET'])
@@ -34,17 +34,23 @@ def handle_message(event):
     print(f'Received message: \'{message}\' from {user_name}')
 
     if ':set_lang' in message:
+        text = 'Invalid message.'
         if message in [f':set_lang={lang}' for lang in languages.keys()]:
             lang = re.findall(':set_lang=(.+)', message)[0]
-            update_lang(user_id, lang)
+            update_user(user_id, lang=lang)
             text = f'Language setting completed -> {languages[lang]}'
-            reply_content = TextSendMessage(text=text)
-        else:
-            text = ''
-            for lang in languages.keys():
-                text += lang + ','
+        reply_content = TextSendMessage(text=text)
 
-            reply_content = TextSendMessage(text=text)
+    elif ':set_show_url' in message:
+        if message == ':set_show_url=true':
+            update_user(user_id, show_url=True)
+            text = 'Configured to include URLs in summary messages.'
+        elif message == ':set_show_url=false':
+            update_user(user_id, show_url=False)
+            text = 'Do not add URLs to summary message.'
+        else:
+            text = 'Invalid message'
+        reply_content = TextSendMessage(text=text)
 
     elif message == ':history':
         history = get_history(user_id)
