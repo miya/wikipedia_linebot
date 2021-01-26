@@ -22,7 +22,7 @@ def create_quick_reply(items: List) -> Union[QuickReply, None]:
     """
     qr_items = [
         QuickReplyButton(
-            action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items
+            action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items[:13]
     ]
     return QuickReply(items=qr_items) if qr_items else None
 
