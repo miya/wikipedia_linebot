@@ -13,7 +13,7 @@ def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, 
     Returns:
         title(str): 検索結果のタイトル
         text(str): 検索結果の要約
-        candidates(list): 検索結果が曖昧だった場合候補タイトル
+        candidates(list): 検索結果が存在する場合は空のリスト、検索結果が存在しない場合は候補タイトル
     """
     title = ''
     candidates = []
@@ -59,6 +59,6 @@ def wikipedia_random(show_url: bool = False) -> Tuple[str, str, List]:
     Returns:
         title(str): 検索結果のタイトル
         text(str): 検索結果の要約
-        candidates(list): 検索結果が曖昧だった場合候補タイトル
+        candidates(list): 検索結果が存在する場合は空のリスト、検索結果が存在しない場合は候補タイトル
     """
     return wikipedia_page(search_word=wikipedia.random(), show_url=show_url)

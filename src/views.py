@@ -18,7 +18,7 @@ def create_quick_reply(items: List) -> Union[QuickReply, None]:
         items(list): wikipediaで検索するタイトル
 
     Returns:
-        QuickReply or None: itemsに値が入っていた場合はQuickReply、からだった場合はNoneを返す
+        QuickReply or None: itemsに値が入っていた場合はQuickReply、空だった場合はNone
     """
     qr_items = [
         QuickReplyButton(
