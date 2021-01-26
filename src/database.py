@@ -45,7 +45,4 @@ def add_history(user_id: str, word: str) -> None:
 
 
 def get_history(user_id: str) -> BaseQuery:
-    return db.session.query(Histories)\
-        .filter_by(user_id=user_id)\
-        .order_by(desc(Histories.created_at))\
-        .limit(13)
+    return db.session.query(Histories).filter_by(user_id=user_id).order_by(desc(Histories.created_at)).limit(13)

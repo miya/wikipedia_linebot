@@ -1,12 +1,10 @@
 import wikipedia
-from typing import Tuple, Union
-
-from linebot.models import (QuickReply, QuickReplyButton, MessageAction)
+from typing import List, Tuple
 
 
-def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str]:
+def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, List]:
     title = ''
-    text = ''
+    candidates = []
     try:
         page = wikipedia.page(search_word)
         title = page.title
@@ -15,26 +13,21 @@ def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str]:
         if show_url:
             text += f'\n\n{page.url}'
     except wikipedia.exceptions.PageError:
-        text = 'There was no match.'
-    except wikipedia.exceptions.DisambiguationError:
-        text = 'Contains ambiguous words.'
+        text = 'There was no match'
+    except wikipedia.exceptions.DisambiguationError as e:
+        text = f'Contains ambiguous words -> "{search_word}"'
+        candidates = e.options
+        print(candidates)
     except wikipedia.exceptions.RedirectError:
-        text = 'The page title was unexpectedly redirected.'
+        text = 'The page title was unexpectedly redirected'
     except wikipedia.exceptions.HTTPTimeoutError:
-        text = 'The request to the Mediawiki server timed out.'
-    finally:
-        return title, text if text else 'none'
+        text = 'The request to the Mediawiki server timed out'
+    return title, text, candidates
 
 
-def wikipedia_search(search_word: str) -> Union[QuickReply, None]:
-    if search_word:
-        items = wikipedia.search(search_word, results=13)
-        items = [QuickReplyButton(action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items]
-        return QuickReply(items=items) if items else None
-    else:
-        return None
+def wikipedia_search(search_word: str) -> List:
+    return wikipedia.search(search_word, results=13)
 
 
-def wikipedia_random(show_url: bool = False) -> Tuple[str, str]:
-    word = wikipedia.random()
-    return wikipedia_page(word, show_url=show_url)
+def wikipedia_random(show_url: bool = False) -> Tuple[str, str, str]:
+    return wikipedia_page(search_word=wikipedia.random(), show_url=show_url)

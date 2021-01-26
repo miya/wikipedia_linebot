@@ -1,5 +1,6 @@
 import re
 import wikipedia
+from typing import List, Union
 from flask import request, abort
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (MessageEvent, TextMessage, TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
@@ -9,21 +10,19 @@ from src.wiki import wikipedia_page, wikipedia_search, wikipedia_random
 from src.database import get_user, update_user, get_history, add_history
 
 
+def create_quick_reply(items: List) -> Union[QuickReply, None]:
+    qr_items = [QuickReplyButton(action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items]
+    return QuickReply(items=qr_items) if qr_items else None
+
+
 def create_reply_content(message: str, user_id: str) -> TextSendMessage:
     if message == ':history':
-        history = get_history(user_id)
-        text = ''
-        items = []
-        for h in history:
-            item = h.history
-            text += f'・{item}\n'
-            if len(item) <= 20:
-                label = item
-            else:
-                label = '{:.17}...'.format(item)
-            items.append(QuickReplyButton(action=MessageAction(label=label, text=item)))
-        quick_reply= QuickReply(items=items) if items else None
-        reply_content = TextSendMessage(text=text if text else 'No history yet.', quick_reply=quick_reply)
+        history = [h.history for h in get_history(user_id)]
+        quick_reply = create_quick_reply(history)
+        reply_content = TextSendMessage(
+            text='Displayed in QuickReply' if history else 'No history yet.',
+            quick_reply=quick_reply
+        )
 
     elif message == ':random':
         user = get_user(user_id)
@@ -31,9 +30,11 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
         random = wikipedia_random(show_url=user.show_url)
         title = random[0]
         text = random[1]
-        quick_reply = wikipedia_search(title)
         if title:
             add_history(user_id, title)
+            quick_reply = create_quick_reply(wikipedia_search(title))
+        else:
+            quick_reply = create_quick_reply(random[2])
         reply_content = TextSendMessage(text=text, quick_reply=quick_reply)
 
     elif ':set_lang' in message:
@@ -41,7 +42,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
         if message in [f':set_lang={lang}' for lang in languages.keys()]:
             lang = re.findall(':set_lang=(.+)', message)[0]
             update_user(user_id, lang=lang)
-            text = f'Language setting completed -> {languages[lang]}'
+            text = f'Language setting completed -> "{languages[lang]}"'
         reply_content = TextSendMessage(text=text)
 
     elif ':set_show_url' in message:
@@ -61,9 +62,11 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
         page = wikipedia_page(message, show_url=user.show_url)
         title = page[0]
         text = page[1]
-        quick_reply = wikipedia_search(title if title else message)
         if title:
             add_history(user_id, title)
+            quick_reply = create_quick_reply(wikipedia_search(title))
+        else:
+            quick_reply = create_quick_reply(page[2])
         reply_content = TextSendMessage(text=text, quick_reply=quick_reply)
 
     return reply_content
