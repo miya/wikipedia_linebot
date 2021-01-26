@@ -41,10 +41,15 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
 
     # 履歴
     if message == ':history':
-        history = [h.history for h in get_history(user_id)]
-        quick_reply = create_quick_reply(history)
+        history = get_history(user_id)
+        text = ''
+        items = []
+        for h in history:
+            text += f'・{h.history}\n'
+            items.append(h.history)
+        quick_reply = create_quick_reply(items)
         reply_content = TextSendMessage(
-            text='Displayed in QuickReply' if history else 'No history yet.',
+            text=text.rstrip() if text else 'No history yet.',
             quick_reply=quick_reply
         )
 
