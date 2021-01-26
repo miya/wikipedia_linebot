@@ -29,5 +29,5 @@ def wikipedia_search(search_word: str) -> List:
     return wikipedia.search(search_word, results=13)
 
 
-def wikipedia_random(show_url: bool = False) -> Tuple[str, str, str]:
+def wikipedia_random(show_url: bool = False) -> Tuple[str, str, List]:
     return wikipedia_page(search_word=wikipedia.random(), show_url=show_url)
