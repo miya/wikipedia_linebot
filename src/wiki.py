@@ -11,7 +11,9 @@ def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, 
         show_url(bool): 要約テキストにURLを含めるかどうか
 
     Returns:
-        tuple(str, str, str): 検索結果のタイトル, 検索結果の要約, 検索結果が曖昧だった場合、候補タイトル
+        title(str): 検索結果のタイトル
+        text(str): 検索結果の要約
+        candidates(list): 検索結果が曖昧だった場合候補タイトル
     """
     title = ''
     candidates = []
@@ -55,7 +57,8 @@ def wikipedia_random(show_url: bool = False) -> Tuple[str, str, List]:
         show_url(bool): 要約テキストにURLを含めるかどうか
 
     Returns:
-        tuple(str, str, str): 検索結果のタイトル, 検索結果の要約, 検索結果が曖昧だった場合、候補タイトル
-
+        title(str): 検索結果のタイトル
+        text(str): 検索結果の要約
+        candidates(list): 検索結果が曖昧だった場合候補タイトル
     """
     return wikipedia_page(search_word=wikipedia.random(), show_url=show_url)
