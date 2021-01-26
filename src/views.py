@@ -11,11 +11,35 @@ from src.database import get_user, update_user, get_history, add_history
 
 
 def create_quick_reply(items: List) -> Union[QuickReply, None]:
-    qr_items = [QuickReplyButton(action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items]
+    """
+    itemsからQuickReplyを生成
+
+    Args:
+        items(list): wikipediaで検索するタイトル
+
+    Returns:
+        QuickReply or None: itemsに値が入っていた場合はQuickReply、からだった場合はNoneを返す
+    """
+    qr_items = [
+        QuickReplyButton(
+            action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items
+    ]
     return QuickReply(items=qr_items) if qr_items else None
 
 
 def create_reply_content(message: str, user_id: str) -> TextSendMessage:
+    """
+    クライアントから受け取ったメッセージから返信メッセージを生成する
+
+    Args:
+        message(str): クライアントが送信したメッセージ
+        user_id(str): LINEのユーザーID
+
+    Returns:
+        TextSendMessage
+    """
+
+    # 履歴
     if message == ':history':
         history = [h.history for h in get_history(user_id)]
         quick_reply = create_quick_reply(history)
@@ -24,6 +48,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
             quick_reply=quick_reply
         )
 
+    # ランダム
     elif message == ':random':
         user = get_user(user_id)
         wikipedia.set_lang(user.lang)
@@ -37,6 +62,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
             quick_reply = create_quick_reply(random[2])
         reply_content = TextSendMessage(text=text, quick_reply=quick_reply)
 
+    # 言語設定
     elif ':set_lang' in message:
         text = 'Invalid message.'
         if message in [f':set_lang={lang}' for lang in languages.keys()]:
@@ -45,6 +71,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
             text = f'Language setting completed -> "{languages[lang]}"'
         reply_content = TextSendMessage(text=text)
 
+    # URLを含めるか設定
     elif ':set_show_url' in message:
         if message == ':set_show_url=true':
             update_user(user_id, show_url=True)
@@ -56,6 +83,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
             text = 'Invalid message'
         reply_content = TextSendMessage(text=text)
 
+    # 受け取ったメッセージで検索
     else:
         user = get_user(user_id)
         wikipedia.set_lang(user.lang)

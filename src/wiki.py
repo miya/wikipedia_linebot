@@ -3,6 +3,16 @@ from typing import List, Tuple
 
 
 def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, List]:
+    """
+    search_wordをWikipediaで検索する
+
+    Args:
+        search_word(str): 検索ワード
+        show_url(bool): 要約テキストにURLを含めるかどうか
+
+    Returns:
+        tuple(str, str, str): 検索結果のタイトル, 検索結果の要約, 検索結果が曖昧だった場合、候補タイトル
+    """
     title = ''
     candidates = []
     try:
@@ -17,7 +27,6 @@ def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, 
     except wikipedia.exceptions.DisambiguationError as e:
         text = f'Contains ambiguous words -> "{search_word}"'
         candidates = e.options
-        print(candidates)
     except wikipedia.exceptions.RedirectError:
         text = 'The page title was unexpectedly redirected'
     except wikipedia.exceptions.HTTPTimeoutError:
@@ -26,8 +35,27 @@ def wikipedia_page(search_word: str, show_url: bool = False) -> Tuple[str, str, 
 
 
 def wikipedia_search(search_word: str) -> List:
+    """
+    search_wordでWikipediaの関連タイトルを取得する
+
+    Args:
+        search_word(str): 検索ワード
+
+    Returns:
+        list: 関連ワード
+    """
     return wikipedia.search(search_word, results=13)
 
 
 def wikipedia_random(show_url: bool = False) -> Tuple[str, str, List]:
+    """
+    Wikipediaでランダムなタイトルを取得しwikipedia_page関数に渡す
+
+    Args:
+        show_url(bool): 要約テキストにURLを含めるかどうか
+
+    Returns:
+        tuple(str, str, str): 検索結果のタイトル, 検索結果の要約, 検索結果が曖昧だった場合、候補タイトル
+
+    """
     return wikipedia_page(search_word=wikipedia.random(), show_url=show_url)
