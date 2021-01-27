@@ -8,23 +8,6 @@ from src.wiki import wikipedia_page, wikipedia_search, wikipedia_random
 from src.database import get_user, update_user, get_history, add_history
 
 
-def create_quick_reply(items: List) -> Union[QuickReply, None]:
-    """
-    itemsからQuickReplyを生成
-
-    Args:
-        items(list): wikipediaで検索するタイトル
-
-    Returns:
-        QuickReply or None: itemsに値が入っていた場合はQuickReply、空だった場合はNone
-    """
-    qr_items = [
-        QuickReplyButton(
-            action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items[:13]
-    ]
-    return QuickReply(items=qr_items) if qr_items else None
-
-
 def create_reply_content(message: str, user_id: str) -> TextSendMessage:
     """
     クライアントから受け取ったメッセージから返信メッセージを生成する
@@ -51,7 +34,6 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
 
     # URLを含めるか設定
     elif ':set_show_url' in message:
-        print('え')
         reply_content = set_show_url(user_id, message)
 
     # 受け取ったメッセージで検索
@@ -59,6 +41,23 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
         reply_content = summary_message(user_id, message)
 
     return reply_content
+
+
+def create_quick_reply(items: List) -> Union[QuickReply, None]:
+    """
+    itemsからQuickReplyを生成
+
+    Args:
+        items(list): wikipediaで検索するタイトル
+
+    Returns:
+        QuickReply or None: itemsに値が入っていた場合はQuickReply、空だった場合はNone
+    """
+    qr_items = [
+        QuickReplyButton(
+            action=MessageAction(label=i if len(i) <= 20 else '{:.17}...'.format(i), text=i)) for i in items[:13]
+    ]
+    return QuickReply(items=qr_items) if qr_items else None
 
 
 def history_message(user_id: str) -> TextSendMessage:
