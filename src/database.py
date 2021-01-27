@@ -34,22 +34,12 @@ def update_user(user_id: str, **kwargs: Dict) -> None:
         kwargs: langかshow_urlをとる
     """
     user = db.session.query(Users).filter_by(user_id=user_id).first()
-    if not user:
-        user = Users()
-        user.user_id = user_id
-        if kwargs.get('lang'):
-            user.lang = kwargs['lang']
-        if kwargs.get('show_url') is not None:
-            user.show_url = kwargs['show_url']
-        db.session.add(user)
-        db.session.commit()
-    else:
-        if kwargs.get('lang'):
-            user.lang = kwargs['lang']
-        if kwargs.get('show_url') is not None:
-            user.show_url = kwargs['show_url']
-        db.session.add(user)
-        db.session.commit()
+    if kwargs.get('lang'):
+        user.lang = kwargs['lang']
+    if kwargs.get('show_url') is not None:
+        user.show_url = kwargs['show_url']
+    db.session.add(user)
+    db.session.commit()
 
 
 def add_history(user_id: str, word: str) -> None:
