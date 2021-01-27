@@ -1,5 +1,5 @@
-from sqlalchemy import desc
 from typing import Dict
+from sqlalchemy import desc
 from flask_sqlalchemy import BaseQuery
 
 from src import db
@@ -32,7 +32,6 @@ def update_user(user_id: str, **kwargs: Dict) -> None:
     Args:
         user_id(str): LINEのユーザーID
         kwargs: langかshow_urlをとる
-
     """
     user = db.session.query(Users).filter_by(user_id=user_id).first()
     if not user:
