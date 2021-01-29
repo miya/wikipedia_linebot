@@ -1,6 +1,6 @@
 import re
 import wikipedia
-from typing import List, Union
+from typing import List, Optional
 from linebot.models import (TextSendMessage, QuickReply, QuickReplyButton, MessageAction)
 
 from src import languages
@@ -43,7 +43,7 @@ def create_reply_content(message: str, user_id: str) -> TextSendMessage:
     return reply_content
 
 
-def create_quick_reply(items: List) -> Union[QuickReply, None]:
+def create_quick_reply(items: List) -> Optional[QuickReply]:
     """
     itemsからQuickReplyを生成
 
