@@ -77,7 +77,7 @@ def history_message(user_id: str) -> TextSendMessage:
         text += f'・{h.history}\n'
         items.append(h.history)
     quick_reply = create_quick_reply(items)
-    return TextSendMessage(text=text.rstrip() if text else 'No history yet', quick_reply=quick_reply)
+    return TextSendMessage(text=text.rstrip() if items else 'No history yet', quick_reply=quick_reply)
 
 
 def random_message(user_id: str) -> TextSendMessage:
